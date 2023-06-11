@@ -1,0 +1,10 @@
+version: 2
+
+updates:
+
+- package-ecosystem: "docker"
+  directory: "/graphviz/"
+  schedule:
+    interval: "weekly"
+    day: "saturday"
+    time: "9:00"
