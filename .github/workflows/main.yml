@@ -26,6 +26,8 @@ jobs:
 
     - uses: "gradle/gradle-build-action@v2"
 
+    - run: "graphviz/build.sh"
+
     - run: "./gradlew ktfmtCheck publish --info --stacktrace"
       env:
         GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
