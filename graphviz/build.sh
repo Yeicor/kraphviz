@@ -9,7 +9,7 @@ cd "$(dirname "$0")"
 
 GRAPHVIZ_VERSION="${GRAPHVIZ_VERSION:-latest}"
 GRAPHVIZ_REPO="${GRAPHVIZ_REPO:-https://gitlab.com/graphviz/graphviz.git}"
-EMBEDDED_KT_FILE="${KOTLIN_EMBEDDED_WASM:-../src/commonMain/kotlin/com/github/yeicor/kraphviz/wasm/Graphviz.kt}"
+EMBEDDED_KT_FILE="${KOTLIN_EMBEDDED_WASM:-../src/commonMain/kotlin/com/github/yeicor/kraphviz/Graphviz.kt}"
 
 # Figure out the version of graphviz we're building
 if [ "$GRAPHVIZ_VERSION" = "latest" ]; then
@@ -29,11 +29,11 @@ docker rm graphviz-build
 # Embed the wasm file into the kotlin source code. TODO: Compression? Resources instead of source code?
 mkdir -p "$(dirname "$EMBEDDED_KT_FILE")"
 cat > "$EMBEDDED_KT_FILE" <<-EOF
-package com.github.yeicor.kraphviz.wasm
+package $(dirname "${EMBEDDED_KT_FILE##*/src/commonMain/kotlin/}" | tr / .)
 
 internal object Graphviz {
   internal val WASM_B64: List<String> =
       listOf(
-          "$(base64 graphviz.wasm | tr '\n' '!' | sed 's/!/",\n          "/g')")
+          "$(base64 --wrap=$((64*1024)) graphviz.wasm | tr '\n' '!' | sed -E 's/!$//' | sed 's/!/",\n          "/g')")
 }
 EOF

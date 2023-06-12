@@ -8,3 +8,10 @@ updates:
     interval: "weekly"
     day: "saturday"
     time: "9:00"
+
+- package-ecosystem: "gradle"
+  directory: "/"
+  schedule:
+    interval: "weekly"
+    day: "saturday"
+    time: "9:00"

@@ -15,6 +15,8 @@ repositories {
 }
 
 kotlin {
+  explicitApi()
+
   jvm {}
 
   js(IR) {
@@ -51,23 +53,27 @@ kotlin {
 
 publishing {
   repositories {
-    (System.getenv("GITHUB_ACTOR") to System.getenv("GITHUB_TOKEN"))
+    val envBasedMavenRepo = {repoUrl: String, userEnv: String, passEnv: String, repoName: String ->
+      (System.getenv(userEnv) to System.getenv(passEnv))
         .takeIf {
           if (it.first == null)
-              logger.warn("GITHUB_ACTOR is not set, disabling GitHubPackages publishing")
-          if (it.second == null)
-              logger.warn("GITHUB_TOKEN is not set, disabling GitHubPackages publishing")
+            logger.warn("$userEnv is not set, disabling GitHubPackages publishing")
+          else if (it.second == null)
+            logger.warn("$passEnv is not set, disabling GitHubPackages publishing")
           it.first != null && it.second != null
         }
-        ?.let { (githubUsername, githubPassword) ->
+        ?.let { (mvnUsername, mvnPassword) ->
           maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/Yeicor/${project.name}")
+            name = repoName
+            url = uri(repoUrl)
             credentials {
-              username = githubUsername
-              password = githubPassword
+              username = mvnUsername
+              password = mvnPassword
             }
           }
         }
+    }
+    envBasedMavenRepo("https://maven.pkg.github.com/Yeicor/${project.name}", "GITHUB_ACTOR", "GITHUB_TOKEN", "GitHubPackages")
+    envBasedMavenRepo("https://repsy.io/mvn/yeicor/github-public/", "REPSY_USER", "REPSY_PASS", "Repsy")
   }
 }

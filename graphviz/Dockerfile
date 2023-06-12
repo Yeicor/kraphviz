@@ -27,7 +27,7 @@ COPY --from=graphviz "$PREFIX" "$PREFIX"
 COPY api.c .
 
 RUN mkdir -p "${OUTPUT}"
-RUN emcc -O$OPTIMIZATION_LEVEL --closure=0 --no-entry -sFILESYSTEM=0 -sASSERTIONS=0 -sALLOW_MEMORY_GROWTH=1 -sENVIRONMENT=web -sEXPORT_KEEPALIVE=1 -sEXPORTED_FUNCTIONS="['_malloc', '_free']" -o "${OUTPUT}/graphviz.wasm" api.c -I"$PREFIX/include" -I"$PREFIX/include/graphviz" -L"$PREFIX/lib" -L"$PREFIX/lib/graphviz" -lgvplugin_dot_layout -lgvplugin_neato_layout -lgvplugin_core -lgvc -lpathplan -lcgraph -lxdot -lcdt # -lexpat
+RUN emcc -O$OPTIMIZATION_LEVEL --no-entry -sEXPORTED_FUNCTIONS="['_malloc', '_free']" -o "${OUTPUT}/graphviz.wasm" api.c -I"$PREFIX/include" -I"$PREFIX/include/graphviz" -L"$PREFIX/lib" -L"$PREFIX/lib/graphviz" -lgvplugin_dot_layout -lgvplugin_neato_layout -lgvplugin_core -lgvc -lpathplan -lcgraph -lxdot -lcdt # -lexpat
 
 
 FROM scratch AS export
