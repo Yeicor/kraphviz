@@ -8,35 +8,33 @@ import com.github.yeicor.ktmpwasm.base.WasmValue
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-public class Kraphviz {
-  private companion object {
-    /** Parse the graphviz WebAssembly module only once, if required. */
-    @OptIn(ExperimentalEncodingApi::class)
-    private val module by lazy {
-      val mod =
-          parseModule(
-              Base64.decode(Graphviz.WASM_B64.joinToString("")),
-              object : Environment {
-                override fun lookupFunction(
-                    module: String,
-                    name: String,
-                    signature: Signature?
-                ): FunctionRef {
-                  // println("wasm: lookupFunction(module=$module, name=$name,
-                  // signature=$signature)")
-                  return object : FunctionRef {
-                    override fun call(arguments: List<WasmValue>): WasmValue {
-                      println("wasm: call $module.$name${arguments.joinToString(", ", "(", " )")}")
-                      return WasmValue.wrap(0)
-                    }
-
-                    override fun type(): Signature = signature!!
+public object Kraphviz {
+  /** Parse the graphviz WebAssembly module only once, if required. */
+  @OptIn(ExperimentalEncodingApi::class)
+  private val module by lazy {
+    val mod =
+        parseModule(
+            Base64.decode(Graphviz.WASM_B64.joinToString("")),
+            object : Environment {
+              override fun lookupFunction(
+                  module: String,
+                  name: String,
+                  signature: Signature?
+              ): FunctionRef {
+                // println("wasm: lookupFunction(module=$module, name=$name,
+                // signature=$signature)")
+                return object : FunctionRef {
+                  override fun call(arguments: List<WasmValue>): WasmValue {
+                    throw NotImplementedError(
+                        "wasm: call of $module.$name with arguments $arguments was not implemented")
                   }
+
+                  override fun type(): Signature = signature!!
                 }
-              })
-      mod.init()
-      mod
-    }
+              }
+            })
+    mod.init()
+    mod
   }
 
   /** Allocate a string in the WebAssembly memory, returning its pointer. */

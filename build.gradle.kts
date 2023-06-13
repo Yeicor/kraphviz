@@ -21,8 +21,20 @@ kotlin {
 
   js(IR) {
     binaries.executable()
-    browser {}
-    nodejs {}
+    browser {
+      testTask {
+        useMocha {
+          timeout = "60000" // ms
+        }
+      }
+    }
+    nodejs {
+      testTask {
+        useMocha {
+          timeout = "60000" // ms
+        }
+      }
+    }
   }
 
   val hostOs = System.getProperty("os.name")
@@ -57,9 +69,9 @@ publishing {
       (System.getenv(userEnv) to System.getenv(passEnv))
         .takeIf {
           if (it.first == null)
-            logger.warn("$userEnv is not set, disabling GitHubPackages publishing")
+            logger.warn("$userEnv is not set, disabling $repoName publishing")
           else if (it.second == null)
-            logger.warn("$passEnv is not set, disabling GitHubPackages publishing")
+            logger.warn("$passEnv is not set, disabling $repoName publishing")
           it.first != null && it.second != null
         }
         ?.let { (mvnUsername, mvnPassword) ->
