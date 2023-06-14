@@ -5,7 +5,7 @@ import kotlin.test.Test
 class KraphvizTest {
   @Test
   fun renderSimple() {
-    val svg = Kraphviz.render("digraph { a -> b }")
+    val svg = Kraphviz.render("digraph {\n\ta -> b\n}")
     println(svg)
   }
 
