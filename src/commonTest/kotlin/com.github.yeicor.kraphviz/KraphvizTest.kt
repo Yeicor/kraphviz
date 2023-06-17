@@ -3,16 +3,18 @@ package com.github.yeicor.kraphviz
 import kotlin.test.Test
 
 class KraphvizTest {
+  private val kraphviz = Kraphviz()
+
   @Test
   fun renderSimple() {
-    val svg = Kraphviz.render("digraph {\n\ta -> b\n}")
+    val svg = kraphviz.render("digraph{a->b}")
     println(svg)
   }
 
   @Test
   fun renderComplex() {
     val svg =
-        Kraphviz.render(
+        kraphviz.render(
             """
       // EXAMPLE FROM https://graphviz.org/Gallery/gradient/cluster.html
       digraph G {
@@ -75,10 +77,10 @@ class KraphvizTest {
   @Test
   fun renderFailure() {
     try {
-      val svg = Kraphviz.render("digraphInvalid { a -> b }")
+      val svg = kraphviz.render("digraphInvalid { a -> b }")
       println(svg)
       throw AssertionError("Expected render to fail")
-    } catch (e: Throwable) {
+    } catch (e: IllegalArgumentException) {
       println("Received expected error: $e")
     }
   }

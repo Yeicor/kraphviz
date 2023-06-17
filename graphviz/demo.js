@@ -27,11 +27,7 @@ WebAssembly.instantiate(wasmFile, {
     const exports = result.instance.exports;
     console.log(exports);
     const dotStr = 'digraph { a -> b; }';
-    const dotPtr = exports.malloc(dotStr.length + 1);
-    const dotView = new Uint8Array(exports.memory.buffer, dotPtr, dotStr.length + 1);
-    for (let i = 0; i < dotStr.length; i++) {
-        dotView[i] = dotStr.charCodeAt(i);
-    }
+    const dotPtr =  mallocString(exports, dotStr);
     let svgPtr = exports.render_dot_svg(dotPtr);
     let svgStr = '';
     let svgView = new Uint8Array(exports.memory.buffer, svgPtr, 1);
@@ -42,3 +38,12 @@ WebAssembly.instantiate(wasmFile, {
     }
     console.log(svgStr);
 })
+
+function mallocString(exports, str) {
+    const ptr = exports.malloc(str.length + 1);
+    const view = new Uint8Array(exports.memory.buffer, ptr, str.length + 1);
+    for (let i = 0; i < str.length; i++) {
+        view[i] = str.charCodeAt(i);
+    }
+    return ptr;
+}
