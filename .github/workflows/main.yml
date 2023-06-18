@@ -28,7 +28,7 @@ jobs:
 
     - run: "graphviz/build.sh"
 
-    - run: "./gradlew ktfmtCheck publish --info --stacktrace"
+    - run: "./gradlew ktfmtCheck publish --info --stacktrace --refresh-dependencies"
       env:
         GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
         REPSY_USER: "${{secrets.REPSY_USER}}"
