@@ -37,6 +37,10 @@ kotlin {
     }
   }
 
+  @Suppress("OPT_IN_USAGE") wasm {
+    d8 {}
+  }
+
   val hostOs = System.getProperty("os.name")
   val isMingwX64 = hostOs.startsWith("Windows")
   when {
