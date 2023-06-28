@@ -7,7 +7,7 @@ plugins {
 
 group = "com.github.yeicor"
 
-version = "1.0.0-SNAPSHOT"
+version = "1.0.0"
 
 repositories {
   mavenCentral()
@@ -54,7 +54,7 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation("com.github.yeicor:ktmpwasm:1.0.0-SNAPSHOT") { isChanging = true }
+        implementation("com.github.yeicor:ktmpwasm:1.0.0") { isChanging = true }
       }
     }
     val commonTest by getting { dependencies { implementation(kotlin("test")) } }
